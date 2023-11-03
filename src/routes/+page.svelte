@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SideBar from '../components/sideBar.svelte';
     import NavBar from '../components/navBar.svelte';
-    import dbEmblem from "../assets/icons/dbimage.avif"
+    import dbEmblem from "../assets/icons/dbImage.png"
 	import ContentMover from '../components/contentMover.svelte';
 
 </script>
