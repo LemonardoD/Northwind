@@ -50,7 +50,7 @@
             <div class="searchField">
                 <p class="label">Search Database</p>
                 <div class="searchSection">
-                    <input class="search" placeholder="Enter keyword..." bind:value={searchQuery}  on:change={handleInputChange} on:keydown={handleInputKeyPress}>
+                    <input class="search" placeholder="Enter keyword..." bind:value={searchQuery}  on:keydown={handleInputKeyPress}>
                     <img src={searchIcon} alt="searchIcon" class="searchIcon"/>  
                 </div>
             </div>
@@ -73,7 +73,7 @@
             {:else if table === "Customers"}
                 <!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-no-static-element-interactions -->
                 {#each searchResult as el, index}
-                    <p class="srchName">{el.companyName}</p>
+                    <p class="srchName"><a on:click = {() =>{goToUnit(`/customers/${el.productId}`)}}>{el.companyName}</a></p>
                     <p class="srchInfo">#{index +1 }, Contact: {el.contactName}, Title: {el.contactTitle}, Phone: {el.phone}</p>
                 {/each}
             {:else if table === "Products"}
@@ -113,11 +113,16 @@
         margin-top: 25px;
     }
     .selectTbl{
+        display: flex;
+        justify-content: flex-start;
         margin-top: 11px;
     }
     label{
+
         cursor: pointer;
-        margin-right: 7.5px;
+        margin-right: 12px;
+        display: inline-flex;
+        position: relative;
     }
     .searchSection{
         padding-top: 1px;
@@ -125,32 +130,30 @@
         position: relative;
     }
     input[type='radio'] {
-        margin-top: 1px;
         position: absolute;
-        height: 18px;
-        width: 18px;
-        background: #ffffff;
+        left: 0;
+        margin-top: 1px;
         border-radius: 60%;
         opacity: 0;
         &:checked  ~ .check {
+            display: block;
             height: 10px;
             width: 10px;
             border: 5.5px solid #3b82f6;
         } 
     }
     .check {
+        float: left;
         border: 1px solid #d1d5db;
         margin-top: 1px;
-        position: absolute;
         height: 18px;
         width: 18px;
-        background: #ffffff;
         border-radius: 60%;
     }
     .radioLabel{
         align-items: center;
         font-size: 16px;
-        padding-left: 28px; 
+        padding-left: 8px; 
     }
     .searchIcon{
         position:absolute; 
@@ -196,7 +199,7 @@
     }
     .search{
         font-family: ui-sans-serif, system-ui, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        padding: 16px;
+        padding: 24px;
         height: 88vh;
 		overflow-y: scroll;
     }
