@@ -2,12 +2,13 @@
     import reloadIcon from '../assets/icons/goback.png';
     import userIcon from '../assets/icons/user.png'
     import bigUserIcon from '../assets/icons/userBig.png';
-	import { getTitles, goToPage, goToUnit, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
+	import { getDate, getPriceFormat, getTitles, goToPage, goToUnit, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
 
     export let dataList: object[]
     export let pgNum: number
     export let pageList: number[]
     export let tblName: string
+    export let icons: boolean
 
     const headTitles = getTitles(dataList)
 
@@ -25,7 +26,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th></th>
+                        {#if icons}
+                            <th></th>
+                        {/if}
                         {#each headTitles as title}
                             {#if !namingList.includes(title)}
                                 <th>{title}</th>
@@ -37,15 +40,20 @@
                 <tbody>
                     {#each dataList as item}
                         <tr>
-                            <td class="imageBig"><img class="bigUserIcon"src={bigUserIcon} alt={tblName}/></td>
-                            <td class="imageSmall"><img class="userIcon"src={userIcon} alt={tblName}/></td>
+                            {#if icons}
+                                <td class="imageBig"><img class="bigUserIcon"src={bigUserIcon} alt={tblName}/></td>
+                                <td class="imageSmall"><img class="userIcon"src={userIcon} alt={tblName}/></td>
+                            {/if}
                             {#each Object.entries(item) as [key, value]}
                                 {#if !namingList.includes(key)}
-                                    {#if hrefNamingList.includes(key)}
-                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                        <!-- svelte-ignore a11y-missing-attribute -->
-                                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                    {#if hrefNamingList.includes(key)}<!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
                                         <td data-label={key}><a on:click = {() =>{goToUnit("/"+tblName.toLowerCase().slice(0, -1)+"/"+Object.values(item)[0])}}>{value}</a></td>
+                                    {:else if key === "Total Price"}
+                                        <td data-label={key}>{getPriceFormat(value)}</td>
+                                    {:else if key === "Price"}
+                                        <td data-label={key}>{`$${value}`}</td>
+                                    {:else if key === "Shipped"}
+                                        <td data-label={key}>{getDate(value)}</td>
                                     {:else}
                                         <td data-label={key}>{value}</td>
                                     {/if}
@@ -82,9 +90,8 @@
         text-decoration: inherit;
     }
     .Page{
-        height: 88vh;
-		overflow-y: scroll;
-        padding: 18px;
+        border: 1px solid #e5e7eb;
+        padding: 24px;
         font-family: ui-sans-serif, system-ui, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     button.pages.active {
@@ -111,6 +118,7 @@
     }
 
     .pageLabel{
+        padding-top: 10px;
         font-size: 80%;
         float: right;
     }
@@ -120,10 +128,10 @@
         padding: 13px 24px;
     }
 
-    td{
+    td{ 
         display: flex;
         justify-content: space-between;
-        padding: 8px 12px;
+        padding: 9.4px 12px;
         text-align: right;
         vertical-align: top;
         border-bottom: 1px solid #f3f4f6;
@@ -175,7 +183,7 @@
         font-size: 16px;
         display: flex;
         align-items: center;
-        padding: 8px 15px 12px;
+        padding: 10px 16px 12px;
     }
 
     .cardHeader{

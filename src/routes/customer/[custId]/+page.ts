@@ -1,12 +1,12 @@
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ fetch, params }) => {
-	const fetchApi = async (cmpId: string) => {
-		const apiResponse = await fetch(`https://dummyjson.com/products/${cmpId}`);
+	const fetchApi = async (id: string) => {
+		const apiResponse = await fetch(`https://northwindtraders-production.up.railway.app/customer/${id}`);
 		const data = await apiResponse.json();
 		return data;
 	};
 	return {
-		supplier: fetchApi(params.cmpId),
+		supplier: fetchApi(params.custId),
 	};
 };

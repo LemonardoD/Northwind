@@ -1,3 +1,7 @@
+export const getPageCount = (arr: object[]) => {
+	return Math.ceil(arr.length / 20);
+};
+
 export const getPagination = (currentPage: number, allPages: number) => {
 	const currPage = currentPage === 0 ? 1 : currentPage;
 	let resp = [1, allPages];
@@ -13,4 +17,8 @@ export const getPagination = (currentPage: number, allPages: number) => {
 	}
 	if (allPages - 1 > 0) resp.push(allPages - 1);
 	return { currPage, pagesList: [...new Set(resp)].sort((a, b) => a - b) };
+};
+
+export const getCurrPageValues = (arr: object[], currPage: number) => {
+	return currPage === 1 ? arr.slice(0, 20) : arr.slice((currPage - 1) * 20, currPage * 20);
 };

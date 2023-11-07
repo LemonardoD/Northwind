@@ -2,12 +2,21 @@
 
     import infoIcon from "../assets/icons/info.png";
     import {sorter} from "../components/columnSorter"
+	import { getPriceFormat, goToUnit, namingList } from "./tablesHelpers";
 
     function goTo(pageName: string) {
         location.replace(`/${pageName.toLowerCase()}s`)
     }
     export let pageName: string
     export let displayedObj: Record<string, string | number>
+    export let tblInfo: {
+        productId: number;
+        Product: string;
+        Quantity: number;
+        "Order Price": number;
+        "Total Price": number;
+        Discount: number;
+    }[]
     const [firstObj, secondObj] = sorter(displayedObj)
 </script>
 
@@ -20,27 +29,132 @@
         <div class="gridColumns">
             <div class="column">
                 {#each Object.entries(firstObj) as [key, value]}
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label>{key}</label>
-                    <p>{value}</p>
+                    {#if key === "Supplier"}
+                        <!-- svelte-ignore a11y-label-has-associated-control -->
+                        <label>{key}</label><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
+                        <p><a on:click = {() =>{goToUnit(`/supplier/${firstObj.supplierId}`)}}>{value}</a></p>
+                    {:else if key === "Customer Id"}
+                        <!-- svelte-ignore a11y-label-has-associated-control -->
+                        <label>{key}</label><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
+                        <p><a on:click = {() =>{goToUnit(`/customer/${value}`)}}>{value}</a></p>
+                    {:else if !namingList.includes(key)}
+                        <!-- svelte-ignore a11y-label-has-associated-control -->
+                        <label>{key}</label>
+                        <p>{value}</p>
+                    {/if}
                 {/each}
             </div>
             <div class="column">
                 {#each Object.entries(secondObj) as [key, value]}
+                    {#if key === "Reports To"}
                     <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label>{key}</label>
-                    <p>{value}</p>
+                        <label>{key}</label><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
+                        <p><a on:click = {() =>{goToUnit(`/employee/${secondObj.reportsId}`)}}>{value}</a></p>
+                    {:else if !namingList.includes(key)}
+                        <!-- svelte-ignore a11y-label-has-associated-control -->
+                        <label>{key}</label>
+                        <p>{value}</p>
+                    {/if}
                 {/each}
             </div>
         </div>
-        <hr>
+    </div>
+    {#if tblInfo.length}
+        <div class="cardTable">
+            <header class="cardHeader"><p class="headerTable">Products in Order</p></header>
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Order Price</th>
+                            <th>Total Price</th>
+                            <th>Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each tblInfo as item}
+                            <tr>
+                                {#each Object.entries(item) as [key, value]}
+                                    {#if key === "Product"}<!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
+                                        <td><a on:click = {() =>{goToUnit(`/product/${item.productId}`)}}>{value}</a></td>
+                                    {:else if key === "Order Price" ||  key === "Total Price"}
+                                        <td>{getPriceFormat(Number(value))}</td>
+                                    {:else if  key === "Discount"}
+                                        <td>{value+"%"}</td>
+                                    {:else if  key === "Quantity"}
+                                        <td>{value}</td>
+                                    {/if}
+                                {/each}
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {/if}
+    <div class="backButton">
         <button type=reset class="redBtn" on:click= {() =>{goTo(pageName)}}>
             Go back
         </button>
     </div>
+   
 </div>
 
 <style>
+    .headerTable{
+        padding: 12px 16px;
+        margin: 0;
+        flex-grow: 1;
+        font-weight: 700;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th{
+        padding: 8px 12px;
+        text-align: left;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    tr {
+        display: table-row;
+        border-bottom-width: 0px;
+    }
+    
+    td{
+        display: table-cell;
+        border-bottom-width: 0px;
+        text-align: left;
+        vertical-align: middle;
+        padding: 9.4px 12px;
+    }
+
+    tr:nth-child(odd) td{
+        background-color: #f9fafb;
+    }
+
+    tr:hover td{
+        background-color: #f3f4f6;
+    }
+    
+    .backButton{
+        padding: 24px;
+        border-top: 1px solid #e5e7eb;
+    }
+    .cardTable{
+        border-radius: 4px;
+        border: 1px solid #f3f4f6;
+    }
+    a{  
+        cursor: pointer;
+        color: #2563EB;
+        text-decoration: inherit;
+    }
     .redBtn:hover{
         background-color: #dc2626;
     }
@@ -65,10 +179,6 @@
         margin-bottom: 12px;
         word-wrap: break-word;
     }
-    hr {
-        margin: 11px -24px 23px;
-        border-top: 1px solid #f3f4f6;
-    }
     img{
         height: 24px;
         width: 24px;
@@ -82,7 +192,7 @@
         font-weight: 700;
     }
     .cardContent{
-        padding:  24px;
+        padding:  24px 24px 12px;
     }
     .gridColumns{
         grid-template-columns: repeat(2,minmax(0,65%));
@@ -93,7 +203,7 @@
         font-family: ui-sans-serif, system-ui, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         border: 1px solid #f3f4f6;
         background-color: #ffffff;
-        margin: 16px;
+        margin: 24px;
     }
     .headerTitle{
         padding-top: 13px;

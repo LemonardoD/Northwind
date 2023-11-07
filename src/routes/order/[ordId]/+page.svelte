@@ -4,6 +4,7 @@
 	import SideBar from '../../../components/sideBar.svelte';
 	import InfoCard from "../../../components/informationCard.svelte"
 	export let data
+	const {ProductsInOrder, ...mainOrder} = data.order
 	
 </script>
 
@@ -11,6 +12,6 @@
 <NavBar/>
 <aside><SideBar/></aside>
 <ContentMover>
-	<InfoCard pageName="Order" displayedObj={data.order}/>
+	<InfoCard pageName="Order" displayedObj={mainOrder} tblInfo={ProductsInOrder}/>
 </ContentMover>
     

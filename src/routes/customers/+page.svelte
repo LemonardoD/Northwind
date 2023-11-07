@@ -1,99 +1,19 @@
-<script>
+<script lang="ts">
 	import SideBar from '../../components/sideBar.svelte';
 	import NavBar from '../../components/navBar.svelte';
 	import ContentMover from '../../components/contentMover.svelte';
-    import Table from '../../components/tableWithIcons.svelte';
+    import Table from '../../components/table.svelte';
 	import { page } from '$app/stores'
-	import { getPagination } from '../../components/getPageNum';
+	import { getCurrPageValues, getPageCount, getPagination } from '../../components/pagination';
+    export let data: {customers: object[]}
 
-    let pgNum = Number($page.url.searchParams.get('page'))
+    let {customers} = data
+    const icons = true
 
-	let list = [
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Antonio Moreno", Contact: "Taquería Antonio Moreno", Title: "Owner", City: "México D.F.", Country: "Mexico"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Comércio Mineiro", Contact: "Pedro Afonso", Title: "Sales Associate", City: "Sao Paulo", Country: "Brazil"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Antonio Moreno", Contact: "Taquería Antonio Moreno", Title: "Owner", City: "México D.F.", Country: "Mexico"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Comércio Mineiro", Contact: "Pedro Afonso", Title: "Sales Associate", City: "Sao Paulo", Country: "Brazil"},	
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Antonio Moreno", Contact: "Taquería Antonio Moreno", Title: "Owner", City: "México D.F.", Country: "Mexico"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Comércio Mineiro", Contact: "Pedro Afonso", Title: "Sales Associate", City: "Sao Paulo", Country: "Brazil"},	
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Antonio Moreno", Contact: "Taquería Antonio Moreno", Title: "Owner", City: "México D.F.", Country: "Mexico"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Alfreds Futterkiste", Contact: "Maria Anders", Title: "Sales Representative", City: "Berlin", Country: "Germany"},
-		{Company: "Comércio Mineiro", Contact: "Pedro Afonso", Title: "Sales Associate", City: "Sao Paulo", Country: "Brazil"},	
-	]
-    let allPages = Math.ceil(list.length / 20)
+    const pgNum = Number($page.url.searchParams.get('page'))
+    const allPages = getPageCount(customers)
     const {currPage, pagesList} = getPagination(pgNum , allPages)
-    list = currPage === 1 ? list.slice(0, 20) : list.slice((currPage -1) *20, (currPage * 20))
-    
+    const currPageCus = getCurrPageValues(customers, currPage)
 </script>
 
 {#if currPage > allPages}
@@ -104,7 +24,7 @@
     </ContentMover>
 {:else}
     <ContentMover>
-        <Table dataList={list} pgNum={currPage} pageList={pagesList} tblName="Customers"/>
+        <Table dataList={currPageCus} pgNum={currPage} pageList={pagesList} tblName="Customers" icons={icons}/>
     </ContentMover>
     <NavBar/>
     <aside><SideBar/></aside>

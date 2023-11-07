@@ -1,28 +1,19 @@
-<script>
+<script lang="ts">
 	import SideBar from '../../components/sideBar.svelte';
 	import NavBar from '../../components/navBar.svelte';
 	import ContentMover from '../../components/contentMover.svelte';
-    import Table from '../../components/tableWithIcons.svelte';
+    import Table from '../../components/table.svelte';
 	import { page } from '$app/stores'
-	import { getPagination } from '../../components/getPageNum';
+	import { getCurrPageValues, getPageCount, getPagination } from '../../components/pagination';
+    export let data: {employees: object[]}
 
-    let pgNum = Number($page.url.searchParams.get('page'))
+    let {employees} = data
+    const icons = true
 
-	let list = [
-		{Name: "Nancy Davolio", Title: "Sales Representative", City: "Seattle", Phone: "(206) 555-9857", Country: "USA"},
-		{Name: "Andrew Fuller", Title: "Vice President Sales", City: "Tacoma", Phone: "(206) 555-9482", Country: "USA"},
-		{Name: "Janet Leverling", Title: "Sales Representative", City: "Kirkland", Phone: "(206) 555-3412", Country: "USA"},
-		{Name: "Margaret Peacock", Title: "Sales Representative", City: "Redmond", Phone: "(206) 555-8122", Country: "USA"},
-		{Name: "Steven Buchanan", Title: "Sales Manager", City: "London", Phone: "(71) 555-4848", Country: "UK"},
-		{Name: "Michael Suyama", Title: "Sales Representative", City: "London", Phone: "(71) 555-7773", Country: "UK"},
-		{Name: "Robert King", Title: "Sales Representative", City: "London", Phone: "(71) 555-5598", Country: "UK"},
-		{Name: "Laura Callahan", Title: "Inside Sales Coordinator", City: "Seattle", Phone: "(206) 555-1189", Country: "USA"},
-		{Name: "Anne Dodsworth", Title: "Sales Representative", City: "London", Phone: "(71) 555-4444", Country: "UK"},
-	]
-    let allPages = Math.ceil(list.length / 20)
+    const pgNum = Number($page.url.searchParams.get('page'))
+    const allPages = getPageCount(employees)
     const {currPage, pagesList} = getPagination(pgNum , allPages)
-    list = currPage === 1 ? list.slice(0, 20) : list.slice((currPage -1) *20, (currPage * 20))
-    
+    const currPageEmp = getCurrPageValues(employees, currPage)
 </script>
 
 {#if currPage > allPages}
@@ -33,7 +24,7 @@
     </ContentMover>
 {:else}
     <ContentMover>
-        <Table dataList={list} pgNum={currPage} pageList={pagesList} tblName="Employees"/>
+        <Table dataList={currPageEmp} pgNum={currPage} pageList={pagesList} tblName="Employees"  icons={icons}/>
     </ContentMover>
     <NavBar/>
     <aside><SideBar/></aside>

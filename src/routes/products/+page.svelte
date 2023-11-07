@@ -1,36 +1,19 @@
-<script>
+<script lang="ts">
 	import SideBar from '../../components/sideBar.svelte';
 	import NavBar from '../../components/navBar.svelte';
 	import ContentMover from '../../components/contentMover.svelte';
-    import Table from '../../components/tableWithOutIcons.svelte';
+    import Table from '../../components/table.svelte';
 	import { page } from '$app/stores'
-	import { getPagination } from '../../components/getPageNum';
+    import { getCurrPageValues, getPageCount, getPagination } from '../../components/pagination';
+    export let data: {products: object[]}
 
-    let pgNum = Number($page.url.searchParams.get('page'))
+    let {products} = data
+    const icons = false
 
-	let list = [
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chef Anton's Gumbo Mix", "Qt per unit": "36 boxes", Price: "$21.35", Stock: 0, Orders: 110},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Chai", "Qt per unit": "10 boxes x 20 bags", Price: "$18", Stock: 40, Orders: 0},
-		{Name: "Tofu", "Qt per unit": "40 - 100 g pkgs.", Price: "$23.25", Stock: 35, Orders: 1},
-	]
-    let allPages = Math.ceil(list.length / 20)
+    const pgNum = Number($page.url.searchParams.get('page'))
+    const allPages = getPageCount(products)
     const {currPage, pagesList} = getPagination(pgNum , allPages)
-    list = currPage === 1 ? list.slice(0, 20) : list.slice((currPage -1) *20, (currPage * 20))
-    
+    const currPageProd = getCurrPageValues(products, currPage)
 </script>
 
 {#if currPage > allPages}
@@ -41,7 +24,7 @@
     </ContentMover>
 {:else}
     <ContentMover>
-        <Table dataList={list} pgNum={currPage} pageList={pagesList} tblName="Products"/>
+        <Table dataList={currPageProd} pgNum={currPage} pageList={pagesList} tblName="Products" icons={icons}/>
     </ContentMover>
     <NavBar/>
     <aside><SideBar/></aside>

@@ -4,11 +4,42 @@
     import NavBar from '../../components/navBar.svelte';
     import searchIcon from "../../assets/icons/searchbl.png"
 	import ContentMover from '../../components/contentMover.svelte';
+	import { goToUnit } from '../../components/tablesHelpers';
+
+    interface searchResult{
+        "productId": number;
+        "productName": string;
+        "quantityPerUnit": string;
+        "unitPrice": number;
+        "unitsInStock": number;
+        "customerId": string;
+        "companyName": string;
+        "contactName": string;
+        "contactTitle": string;
+        "phone": string;
+    }
     let table = 'Products';
-	
-	function onChange(event: { currentTarget: { value: string; }; }) {
+    let searchResult: searchResult[] = []
+    let searchQuery = ''
+
+	function handleRadioChange(event: { currentTarget: { value: string; }; }) {
 		table = event.currentTarget.value;
+        searchResult = [];
 	}
+
+    function handleInputKeyPress(event: { key: string; }) {
+        if (event.key === 'Enter') {
+            handleInputChange({ currentTarget: { value: searchQuery } });
+        }
+    }
+
+    async function handleInputChange(event: { currentTarget: { value: string; }; }) {
+        searchQuery = event.currentTarget.value
+        const apiResponse = await fetch(`https://northwindtraders-production.up.railway.app/search?tblName=${table}&SearchText=${searchQuery}`);
+        searchResult = await apiResponse.json();
+    }
+
+    
 </script>
 
 <NavBar/>
@@ -19,25 +50,39 @@
             <div class="searchField">
                 <p class="label">Search Database</p>
                 <div class="searchSection">
-                    <input class="search"placeholder="Enter keyword..." value="">
+                    <input class="search" placeholder="Enter keyword..." bind:value={searchQuery}  on:change={handleInputChange} on:keydown={handleInputKeyPress}>
                     <img src={searchIcon} alt="searchIcon" class="searchIcon"/>  
                 </div>
             </div>
             <p class="label">Tables</p>
             <div  class="selectTbl">
                 <label>
-                    <input class="radio"checked={table==="Products"} on:change={onChange} type="radio" name="table" value="Products"/>
+                    <input class="radio"checked={table==="Products"} on:change={handleRadioChange} type="radio" name="table" value="Products"/>
                     <span class="check"></span>
                     <span class="radioLabel">Products</span>
                   </label>
                 <label>
-                    <input class="radio"checked={table==="Customers"} on:change={onChange} type="radio" name="table" value="Customers"  />
+                    <input class="radio"checked={table==="Customers"} on:change={handleRadioChange} type="radio" name="table" value="Customers"  />
                     <span class="check"></span>
                     <span class="radioLabel">Customers</span>
                 </label>
             </div>
             <p class="resultLabel">Search results</p>
-            <p class="noResult">No results</p>
+            {#if !searchResult.length}
+                <p class="noResult">No results</p>
+            {:else if table === "Customers"}
+                <!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-no-static-element-interactions -->
+                {#each searchResult as el, index}
+                    <p class="srchName">{el.companyName}</p>
+                    <p class="srchInfo">#{index +1 }, Contact: {el.contactName}, Title: {el.contactTitle}, Phone: {el.phone}</p>
+                {/each}
+            {:else if table === "Products"}
+                <!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-no-static-element-interactions -->
+                {#each searchResult as el, index}
+                    <p class="srchName"><a on:click = {() =>{goToUnit(`/product/${el.productId}`)}}>{el.productName}</a></p>
+                    <p class="srchInfo">#{index +1 }, Quantity Per Unit: {el.quantityPerUnit}, Price: {Number(el.unitPrice)}, Stock: {el.unitsInStock}</p>
+                {/each}
+            {/if}
         </div>
     </div>
 </ContentMover>
@@ -45,6 +90,24 @@
 
 
 <style>
+    a{
+        cursor: pointer;
+    }
+    .srchName{
+        color: #2563EB;
+        font-size: 16px;
+        font-family: inherit;
+        margin-bottom:  0px;
+        margin-top: 8px;
+    }
+    .srchInfo{
+        color: #9ca3af;
+        font-size: 14px;
+        font-family: inherit;
+        margin: 0;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
     .noResult{
         font-size: 16px;
         margin-top: 25px;
@@ -101,6 +164,8 @@
         font-size: 18px;
         line-height: 28px;
         font-weight: 700;
+        margin-bottom: 0px;
+        margin-top: 18px;
     }
     .searchField{
         margin-bottom: 14px;
@@ -132,6 +197,8 @@
     .search{
         font-family: ui-sans-serif, system-ui, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         padding: 16px;
+        height: 88vh;
+		overflow-y: scroll;
     }
     .content{
         border-radius: 1px;

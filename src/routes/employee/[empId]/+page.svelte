@@ -11,6 +11,6 @@
 <NavBar/>
 <aside><SideBar/></aside>
 <ContentMover>
-	<InfoCard pageName="Employee" displayedObj={data.employee}/>
+	<InfoCard pageName="Employee" displayedObj={data.employee} tblInfo={[]}/>
 </ContentMover>
     
