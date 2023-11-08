@@ -5,15 +5,19 @@
     import Table from '../../components/table.svelte';
 	import { page } from '$app/stores'
 	import { getCurrPageValues, getPageCount, getPagination } from '../../components/pagination';
-    export let data: {employees: object[]}
+	import { updateMetric } from '../../components/metric';
+	import type { EmployeesResAPI } from '../../DTOs';
+    export let data: EmployeesResAPI
 
-    let {employees} = data
+    let {response, ...metric} = data.employees
+    const countedMtr = Object.assign({}, metric, { resCount: response.length });
+    updateMetric(countedMtr)
     const icons = true
 
     const pgNum = Number($page.url.searchParams.get('page'))
-    const allPages = getPageCount(employees)
+    const allPages = getPageCount(response)
     const {currPage, pagesList} = getPagination(pgNum , allPages)
-    const currPageEmp = getCurrPageValues(employees, currPage)
+    const currPageEmp = getCurrPageValues(response, currPage)
 </script>
 
 {#if currPage > allPages}

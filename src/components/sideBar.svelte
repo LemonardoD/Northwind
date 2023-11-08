@@ -14,7 +14,7 @@
     let root: HTMLDivElement; 
     onMount(() => {
         const currentUrl = root.querySelector(`a[href='${$page.url.pathname}'`);
-        currentUrl!.classList.add('active')
+        if(currentUrl !== null) currentUrl.classList.add('active')
         
     });
     

@@ -1,8 +1,7 @@
 <script lang="ts">
-
     import infoIcon from "../assets/icons/info.png";
     import {sorter} from "../components/columnSorter"
-	import { getPriceFormat, goToUnit, namingList } from "./tablesHelpers";
+	import { getPriceFormat, namingList } from "./tablesHelpers";
 
     function goTo(pageName: string) {
         location.replace(`/${pageName.toLowerCase()}s`)
@@ -32,11 +31,11 @@
                     {#if key === "Supplier"}
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <label>{key}</label><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <p><a on:click = {() =>{goToUnit(`/supplier/${firstObj.supplierId}`)}}>{value}</a></p>
+                        <p><a href={`/supplier/${firstObj.supplierId}`}>{value}</a></p>
                     {:else if key === "Customer Id"}
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <label>{key}</label><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <p><a on:click = {() =>{goToUnit(`/customer/${value}`)}}>{value}</a></p>
+                        <p><a href={`/customer/${value}`}>{value}</a></p>
                     {:else if !namingList.includes(key)}
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <label>{key}</label>
@@ -49,7 +48,7 @@
                     {#if key === "Reports To"}
                     <!-- svelte-ignore a11y-label-has-associated-control -->
                         <label>{key}</label><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
-                        <p><a on:click = {() =>{goToUnit(`/employee/${secondObj.reportsId}`)}}>{value}</a></p>
+                        <p><a href={`/employee/${secondObj.reportsId}`}>{value}</a></p>
                     {:else if !namingList.includes(key)}
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <label>{key}</label>
@@ -78,7 +77,7 @@
                             <tr>
                                 {#each Object.entries(item) as [key, value]}
                                     {#if key === "Product"}<!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
-                                        <td><a on:click = {() =>{goToUnit(`/product/${item.productId}`)}}>{value}</a></td>
+                                        <td><a href={`/product/${item.productId}`}>{value}</a></td>
                                     {:else if key === "Order Price" ||  key === "Total Price"}
                                         <td>{getPriceFormat(Number(value))}</td>
                                     {:else if  key === "Discount"}
@@ -95,7 +94,7 @@
         </div>
     {/if}
     <div class="backButton">
-        <button type=reset class="redBtn" on:click= {() =>{goTo(pageName)}}>
+        <button class="redBtn" on:click= {() =>{goTo(pageName)}}>
             Go back
         </button>
     </div>

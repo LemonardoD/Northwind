@@ -2,7 +2,8 @@
     import reloadIcon from '../assets/icons/goback.png';
     import userIcon from '../assets/icons/user.png'
     import bigUserIcon from '../assets/icons/userBig.png';
-	import { getDate, getPriceFormat, getTitles, goToPage, goToUnit, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
+	import { getDate, getPriceFormat, getTitles, goToPage, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
+    import { goto } from '$app/navigation';
 
     export let dataList: object[]
     export let pgNum: number
@@ -47,7 +48,7 @@
                             {#each Object.entries(item) as [key, value]}
                                 {#if !namingList.includes(key)}
                                     {#if hrefNamingList.includes(key)}<!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
-                                        <td data-label={key}><a on:click = {() =>{goToUnit("/"+tblName.toLowerCase().slice(0, -1)+"/"+Object.values(item)[0])}}>{value}</a></td>
+                                        <td data-label={key}><a href={"/"+tblName.toLowerCase().slice(0, -1)+"/"+Object.values(item)[0]+"/"}>{value}</a></td>
                                     {:else if key === "Total Price"}
                                         <td data-label={key}>{getPriceFormat(value)}</td>
                                     {:else if key === "Price"}
@@ -70,7 +71,7 @@
             {:else}
                 <div class="tablePagination">
                     {#each pageList as page}
-                        <button on:click = {() =>{goToPage(page, tblName)}} class="pages {page === pgNum ? 'active' : ''}">
+                        <button on:click = {() =>{goto(`${tblName.toLowerCase()}?page=${page}`)}} class="pages {page === pgNum ? 'active' : ''}">
                             {page} 
                         </button>
                     {/each}

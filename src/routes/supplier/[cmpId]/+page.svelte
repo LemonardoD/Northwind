@@ -3,7 +3,13 @@
 	import NavBar from '../../../components/navBar.svelte';
 	import SideBar from '../../../components/sideBar.svelte';
 	import InfoCard from "../../../components/informationCard.svelte"
-	export let data
+	import { updateMetric } from '../../../components/metric';
+	import type { Supplier } from '../../../DTOs';
+	
+	export let data: Supplier
+	let {response, ...metric} = data.supplier
+    const countedMtr = Object.assign({}, metric, { resCount: 1 });
+    updateMetric(countedMtr)
 	
 </script>
 
@@ -11,6 +17,6 @@
 <NavBar/>
 <SideBar/>
 <ContentMover>
-	<InfoCard pageName="Supplier" displayedObj={data.supplier} tblInfo={[]}/>
+	<InfoCard pageName="Supplier" displayedObj={response} tblInfo={[]}/>
 </ContentMover>
     

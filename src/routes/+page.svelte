@@ -3,7 +3,10 @@
     import NavBar from '../components/navBar.svelte';
     import dbEmblem from "../assets/icons/dbImage.png"
 	import ContentMover from '../components/contentMover.svelte';
+    import { writable, type Writable } from 'svelte/store';
+	import type { Metric } from '../DTOs';
 
+    export const sqlMetric: Writable<Metric[]> = writable([]);
 </script>
 
 <NavBar/>

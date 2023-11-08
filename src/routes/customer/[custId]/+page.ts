@@ -7,6 +7,6 @@ export const load: PageLoad = ({ fetch, params }) => {
 		return data;
 	};
 	return {
-		supplier: fetchApi(params.custId),
+		customer: fetchApi(params.custId),
 	};
 };

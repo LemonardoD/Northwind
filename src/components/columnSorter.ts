@@ -1,4 +1,4 @@
-import { getDate, getPriceFormat, namingList } from "./tablesHelpers";
+import { getDate, getPriceFormat } from "./tablesHelpers";
 
 export const sorter = (obj4Sort: Record<string, string | number>) => {
 	const workingObj = valueChanger(obj4Sort);

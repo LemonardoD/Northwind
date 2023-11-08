@@ -5,19 +5,10 @@
     import searchIcon from "../../assets/icons/searchbl.png"
 	import ContentMover from '../../components/contentMover.svelte';
 	import { goToUnit } from '../../components/tablesHelpers';
+	import { updateMetric } from '../../components/metric';
+	import type { SearchResultApi, searchResult } from '../../DTOs';
 
-    interface searchResult{
-        "productId": number;
-        "productName": string;
-        "quantityPerUnit": string;
-        "unitPrice": number;
-        "unitsInStock": number;
-        "customerId": string;
-        "companyName": string;
-        "contactName": string;
-        "contactTitle": string;
-        "phone": string;
-    }
+    
     let table = 'Products';
     let searchResult: searchResult[] = []
     let searchQuery = ''
@@ -36,7 +27,11 @@
     async function handleInputChange(event: { currentTarget: { value: string; }; }) {
         searchQuery = event.currentTarget.value
         const apiResponse = await fetch(`https://northwindtraders-production.up.railway.app/search?tblName=${table}&SearchText=${searchQuery}`);
-        searchResult = await apiResponse.json();
+        const data: SearchResultApi = await apiResponse.json();
+        let {response, ...metric} = data
+        searchResult = response
+        const countedMtr = Object.assign({}, metric, { resCount: response.length });
+        updateMetric(countedMtr)
     }
 
     
