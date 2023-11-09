@@ -12,10 +12,9 @@
     updateMetric(countedMtr)
 </script>
 
-
-<NavBar/>
-<aside><SideBar/></aside>
 <ContentMover>
 	<InfoCard pageName="Customer" displayedObj={response} tblInfo={[]}/>
 </ContentMover>
+<NavBar/>
+<aside><SideBar/></aside>
     

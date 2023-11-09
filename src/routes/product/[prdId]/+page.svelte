@@ -13,9 +13,8 @@
 </script>
 
 
-<NavBar/>
-<aside><SideBar/></aside>
 <ContentMover>
 	<InfoCard pageName="Product" displayedObj={response} tblInfo={[]}/>
 </ContentMover>
-    
+<NavBar/>
+<aside><SideBar/></aside>

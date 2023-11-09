@@ -12,9 +12,9 @@
 </script>
 
 
-<NavBar/>
-<aside><SideBar/></aside>
 <ContentMover>
 	<InfoCard pageName="Employee" displayedObj={response} tblInfo={[]}/>
 </ContentMover>
+<NavBar/>
+<aside><SideBar/></aside>
     

@@ -2,10 +2,8 @@
     import infoIcon from "../assets/icons/info.png";
     import {sorter} from "../components/columnSorter"
 	import { getPriceFormat, namingList } from "./tablesHelpers";
+    import { goto } from '$app/navigation';
 
-    function goTo(pageName: string) {
-        location.replace(`/${pageName.toLowerCase()}s`)
-    }
     export let pageName: string
     export let displayedObj: Record<string, string | number>
     export let tblInfo: {
@@ -77,13 +75,13 @@
                             <tr>
                                 {#each Object.entries(item) as [key, value]}
                                     {#if key === "Product"}<!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-no-static-element-interactions -->
-                                        <td><a href={`/product/${item.productId}`}>{value}</a></td>
+                                        <td data-label={key}><a href={`/product/${item.productId}`}>{value}</a></td>
                                     {:else if key === "Order Price" ||  key === "Total Price"}
-                                        <td>{getPriceFormat(Number(value))}</td>
+                                        <td data-label={key}>{getPriceFormat(Number(value))}</td>
                                     {:else if  key === "Discount"}
-                                        <td>{value+"%"}</td>
+                                        <td data-label={key}>{value+"%"}</td>
                                     {:else if  key === "Quantity"}
-                                        <td>{value}</td>
+                                        <td data-label={key}>{value}</td>
                                     {/if}
                                 {/each}
                             </tr>
@@ -94,11 +92,10 @@
         </div>
     {/if}
     <div class="backButton">
-        <button class="redBtn" on:click= {() =>{goTo(pageName)}}>
+        <button class="redBtn" on:click= {() =>{goto(`/${pageName.toLowerCase()}s`)}}>
             Go back
         </button>
     </div>
-   
 </div>
 
 <style>
@@ -111,34 +108,6 @@
     table {
         width: 100%;
         border-collapse: collapse;
-    }
-
-    th{
-        padding: 8px 12px;
-        text-align: left;
-        font-size: 16px;
-        line-height: 24px;
-    }
-
-    tr {
-        display: table-row;
-        border-bottom-width: 0px;
-    }
-    
-    td{
-        display: table-cell;
-        border-bottom-width: 0px;
-        text-align: left;
-        vertical-align: middle;
-        padding: 9.4px 12px;
-    }
-
-    tr:nth-child(odd) td{
-        background-color: #f9fafb;
-    }
-
-    tr:hover td{
-        background-color: #f3f4f6;
     }
     
     .backButton{
@@ -215,5 +184,67 @@
         display: flex;
         align-items: stretch;
         border-bottom: 1px solid #f3f4f6;
+    }
+
+    @media (max-width: 1023px) {
+        thead {
+            display: none;
+        }
+        
+        td::before {
+            content: attr(data-label);
+            text-align: left;
+            font-weight: 600;
+        }
+
+        tr {
+            position: relative;
+            display: block;
+            max-width: 100%;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        td{ 
+            display: flex;
+            justify-content: space-between;
+            padding: 9.4px 12px;
+            text-align: right;
+            vertical-align: top;
+            border-bottom: 1px solid #f3f4f6;
+        }
+    }
+    @media (min-width: 1023px) {
+
+        td::before {
+            display: none;
+        }
+
+        th{
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        tr {
+            display: table-row;
+            border-bottom-width: 0px;
+        }
+
+        td{
+            display: table-cell;
+            border-bottom-width: 0px;
+            text-align: left;
+            vertical-align: middle;
+            padding: 9.4px 12px;
+        }
+
+        tr:nth-child(odd) td{
+            background-color: #f9fafb;
+        }
+
+        tr:hover td{
+            background-color: #f3f4f6;
+        }
     }
 </style>

@@ -30,8 +30,6 @@
     
 </script>
 
-<NavBar/>
-<aside><SideBar/></aside>
 <ContentMover>
     <div class="dashBoard">
         <div class="content">
@@ -61,7 +59,8 @@
         </div>
     </div>
 </ContentMover>
-
+<NavBar/>
+<aside><SideBar/></aside>
 
 
 <style>

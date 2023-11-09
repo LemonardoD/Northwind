@@ -1,7 +1,3 @@
-export const goToUnit = (route: string) => {
-	location.replace(route);
-};
-
 export const goToPage = (page: number, route: string) => {
 	location.replace(`${route.toLowerCase()}?page=${page}`);
 };

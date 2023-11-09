@@ -8,9 +8,6 @@
 
     export const sqlMetric: Writable<Metric[]> = writable([]);
 </script>
-
-<NavBar/>
-<aside><SideBar/></aside>
 <ContentMover>
     <div class="homePage">
         <div class="content">
@@ -24,6 +21,8 @@
         </div>
     </div>
 </ContentMover>
+<NavBar/>
+<aside><SideBar/></aside>
 
 
 

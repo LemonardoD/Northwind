@@ -3,7 +3,6 @@
     import userIcon from '../assets/icons/user.png'
     import bigUserIcon from '../assets/icons/userBig.png';
 	import { getDate, getPriceFormat, getTitles, goToPage, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
-    import { goto } from '$app/navigation';
 
     export let dataList: object[]
     export let pgNum: number
@@ -71,7 +70,7 @@
             {:else}
                 <div class="tablePagination">
                     {#each pageList as page}
-                        <button on:click = {() =>{goto(`${tblName.toLowerCase()}?page=${page}`)}} class="pages {page === pgNum ? 'active' : ''}">
+                        <button on:click = {() =>{goToPage(page, tblName)}} class="pages {page === pgNum ? 'active' : ''}">
                             {page} 
                         </button>
                     {/each}
@@ -129,6 +128,19 @@
         padding: 13px 24px;
     }
 
+    td::before {
+        content: attr(data-label);
+        text-align: left;
+        font-weight: 600;
+    }
+
+    tr {
+        position: relative;
+        display: block;
+        max-width: 100%;
+        border-bottom: 4px solid #f3f4f6;
+    }
+
     td{ 
         display: flex;
         justify-content: space-between;
@@ -155,18 +167,6 @@
         padding: 11px 15px;
     }
 
-    td::before {
-        content: attr(data-label);
-        text-align: left;
-        font-weight: 600;
-    }
-
-    tr {
-        position: relative;
-        display: block;
-        max-width: 100%;
-        border-bottom: 4px solid #f3f4f6;
-    }
     table {
         margin: 0;
         width: 100%;
