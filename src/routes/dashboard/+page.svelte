@@ -5,14 +5,16 @@
 	import { countMetric, sqlMetric } from '../../components/metric';
 	import { onMount } from 'svelte';
 
+    const {VITE_IPINFO, VITE_AIRLABS} = import.meta.env
+    
     let country = '';
     let airPort = '';
     async function getClientIP() {
         try {
-            const responseIp = await fetch(`https://ipinfo.io/json?token=fbcbaed02c0c73`);
+            const responseIp = await fetch(`https://ipinfo.io/json?token=${VITE_IPINFO}`);
             const dataIp = await responseIp.json();
             const location = dataIp.loc.split(',')
-            const responseAirPort = await fetch(`https://airlabs.co/api/v9/nearby?lat=${location[0]}&lng=${location[1]}&distance=20&api_key=81322007-a88e-429c-a239-3aec2ba2cb11`);
+            const responseAirPort = await fetch(`https://airlabs.co/api/v9/nearby?lat=${location[0]}&lng=${location[1]}&distance=20&api_key=${VITE_AIRLABS}`);
             const dataAirPort = await responseAirPort.json();
             airPort = dataAirPort.response.airports[0].icao_code
             country = dataIp.country;
