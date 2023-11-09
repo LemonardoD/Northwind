@@ -4,9 +4,9 @@
     import NavBar from '../../components/navBar.svelte';
     import searchIcon from "../../assets/icons/searchbl.png"
 	import ContentMover from '../../components/contentMover.svelte';
-	import { goToUnit } from '../../components/tablesHelpers';
 	import { updateMetric } from '../../components/metric';
 	import type { SearchResultApi, searchResult } from '../../DTOs';
+	import { goto } from '$app/navigation';
 
     
     let table = 'Products';
@@ -67,13 +67,13 @@
             {:else if table === "Customers"}
                 <!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-no-static-element-interactions -->
                 {#each searchResult as el, index}
-                    <p class="srchName"><a on:click = {() =>{goToUnit(`/customers/${el.productId}`)}}>{el.companyName}</a></p>
+                    <p class="srchName"><a on:click = {() =>{goto(`/customers/${el.productId}`)}}>{el.companyName}</a></p>
                     <p class="srchInfo">#{index +1 }, Contact: {el.contactName}, Title: {el.contactTitle}, Phone: {el.phone}</p>
                 {/each}
             {:else if table === "Products"}
                 <!-- svelte-ignore a11y-missing-attribute --><!-- svelte-ignore a11y-click-events-have-key-events --><!-- svelte-ignore a11y-no-static-element-interactions -->
                 {#each searchResult as el, index}
-                    <p class="srchName"><a on:click = {() =>{goToUnit(`/product/${el.productId}`)}}>{el.productName}</a></p>
+                    <p class="srchName"><a on:click = {() =>{goto(`/product/${el.productId}`)}}>{el.productName}</a></p>
                     <p class="srchInfo">#{index +1 }, Quantity Per Unit: {el.quantityPerUnit}, Price: {Number(el.unitPrice)}, Stock: {el.unitsInStock}</p>
                 {/each}
             {/if}
