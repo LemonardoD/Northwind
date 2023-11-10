@@ -22,5 +22,5 @@ export const getPriceFormat = (value: number) => {
 	return `$${value.toFixed(2)}`;
 };
 
-export const namingList = ["supplierId", "customerId", "employeeId", "productId", "orderId", "reportsId"];
+export const namingList = ["supplierId", "customerId", "employeeId", "productId", "orderId", "reportsTo"];
 export const hrefNamingList = ["Company", "Name", "Id"];
