@@ -1,22 +1,26 @@
 <script lang="ts">
-  import { sidebarIsOpen } from './sidebar';
+  import { closeSidebar, sidebarIsOpen, toggleSidebar } from "./sidebar";
   
   let sideBar: string;
   sidebarIsOpen.subscribe((value) => {
-    sideBar = value ? 'contentMover sidebarOpen' : 'contentMover';
+    sideBar = value ? "contentMover sidebarOpen" : "contentMover";
   });
-    
+
+  let innerWidth = 0
+  $: if(innerWidth > 1023) closeSidebar()
 </script>
 
+<svelte:window bind:innerWidth />
 <div class={sideBar}>
     <slot></slot>
 </div>
 
-<style> 
+<style>
   .contentMover {
     transition: transform 0.2s ease-in-out;
   }
   .sidebarOpen{
     transform: translateX(240px);
   }
+  
 </style>

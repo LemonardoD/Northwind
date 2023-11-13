@@ -7,3 +7,7 @@ export const sidebarIsOpen = writable(false);
 export function toggleSidebar() {
 	sidebarIsOpen.update(el => !el);
 }
+
+export function closeSidebar() {
+	sidebarIsOpen.set(false);
+}
