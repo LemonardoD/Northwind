@@ -1,17 +1,28 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
     import reloadIcon from '../assets/icons/goback.png';
     import userIcon from '../assets/icons/user.png'
     import bigUserIcon from '../assets/icons/userBig.png';
-	import { getDate, getPriceFormat, getTitles, goToPage, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
+	import { getCurrPageValues, getPagination } from './pagination';
+	import { getDate, getPriceFormat, getTitles, handleReloadClick, hrefNamingList, namingList } from './tablesHelpers';
 
     export let dataList: object[]
-    export let pgNum: number
-    export let pageList: number[]
     export let tblName: string
     export let icons: boolean
-
     const headTitles = getTitles(dataList)
 
+    let urlPage = Number($page.url.searchParams.get('page'))
+    let currentPage =  urlPage === 0? 1:  urlPage
+    let showedData = getCurrPageValues(dataList, currentPage)
+    let pageList = getPagination(currentPage, dataList)
+    
+    const setCurrentPage = (newPage: number) => {
+        currentPage = newPage
+        goto(`/${tblName.toLowerCase()}?page=${newPage}`)
+        showedData = getCurrPageValues(dataList, newPage)
+        pageList = getPagination(newPage, dataList)
+    }
 </script>
 
 <div class="Page">
@@ -38,7 +49,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each dataList as item}
+                    {#each showedData as item}
                         <tr>
                             {#if icons}
                                 <td class="imageBig"><img class="bigUserIcon"src={bigUserIcon} alt={tblName}/></td>
@@ -70,11 +81,11 @@
             {:else}
                 <div class="tablePagination">
                     {#each pageList as page}
-                        <button on:click = {() =>{goToPage(page, tblName)}} class="pages {page === pgNum ? 'active' : ''}">
+                        <button on:click ={() => {setCurrentPage(page)}} class="pages {page === currentPage ? 'active' : ''}">
                             {page} 
                         </button>
                     {/each}
-                    <small class="pageLabel">Page {pgNum} of {pageList[pageList.length-1]}</small>
+                    <small class="pageLabel">Page {currentPage} of {pageList[pageList.length-1]}</small>
                 </div>
             {/if}
             
@@ -90,7 +101,6 @@
         text-decoration: inherit;
     }
     .Page{
-        border: 1px solid #e5e7eb;
         padding: 24px;
         font-family: ui-sans-serif, system-ui, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
@@ -195,6 +205,7 @@
     }
 
     .content{
+        border: 1px solid #f3f4f6;
         background-color:#ffffff;
     }
 

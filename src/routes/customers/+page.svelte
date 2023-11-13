@@ -4,7 +4,7 @@
 	import ContentMover from '../../components/contentMover.svelte';
     import Table from '../../components/table.svelte';
 	import { page } from '$app/stores'
-	import { getCurrPageValues, getPageCount, getPagination } from '../../components/pagination';
+	import { getPageCount } from '../../components/pagination';
 	import { updateMetric } from '../../components/metric';
 	import type { CustomersResAPI } from '../../DTOs';
     export let data: CustomersResAPI
@@ -14,10 +14,8 @@
     updateMetric(countedMtr)
     const icons = true
 
-    const pgNum = Number($page.url.searchParams.get('page'))
+    const currPage = Number($page.url.searchParams.get('page'))
     const allPages = getPageCount(response)
-    const {currPage, pagesList} = getPagination(pgNum , allPages)
-    const currPageCus = getCurrPageValues(response, currPage)
 </script>
 
 {#if currPage > allPages}
@@ -28,7 +26,7 @@
     </ContentMover>
 {:else}
     <ContentMover>
-        <Table dataList={currPageCus} pgNum={currPage} pageList={pagesList} tblName="Customers" icons={icons}/>
+        <Table dataList={response} tblName="Customers" icons={icons}/>
     </ContentMover>
     <NavBar/>
     <aside><SideBar/></aside>

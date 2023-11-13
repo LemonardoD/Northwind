@@ -2,7 +2,8 @@ export const getPageCount = (arr: object[]) => {
 	return Math.ceil(arr.length / 20);
 };
 
-export const getPagination = (currentPage: number, allPages: number) => {
+export const getPagination = (currentPage: number, arr: object[]) => {
+	const allPages = getPageCount(arr);
 	const currPage = currentPage === 0 ? 1 : currentPage;
 	let resp = [1, allPages];
 	for (let i = currPage - 3; i < currPage; i++) {
@@ -16,7 +17,7 @@ export const getPagination = (currentPage: number, allPages: number) => {
 		}
 	}
 	if (allPages - 1 > 0) resp.push(allPages - 1);
-	return { currPage, pagesList: [...new Set(resp)].sort((a, b) => a - b) };
+	return [...new Set(resp)].sort((a, b) => a - b);
 };
 
 export const getCurrPageValues = (arr: object[], currPage: number) => {

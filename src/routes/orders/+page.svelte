@@ -4,7 +4,7 @@
 	import ContentMover from '../../components/contentMover.svelte';
     import Table from '../../components/table.svelte';
 	import { page } from '$app/stores'
-	import { getCurrPageValues, getPageCount, getPagination } from '../../components/pagination';
+	import { getPageCount } from '../../components/pagination';
 	import type { OrdersResAPI } from '../../DTOs';
 	import { updateMetric } from '../../components/metric';
     
@@ -14,10 +14,8 @@
     updateMetric(countedMtr)
 
     const icons = false
-    const pgNum = Number($page.url.searchParams.get('page'))
+    const currPage = Number($page.url.searchParams.get('page'))
     const allPages = getPageCount(response)
-    const {currPage, pagesList} = getPagination(pgNum , allPages)
-    const currPageOrders = getCurrPageValues(response, currPage)
     
 </script>
 
@@ -29,7 +27,7 @@
     </ContentMover>
 {:else}
     <ContentMover>
-        <Table dataList={currPageOrders} pgNum={currPage} pageList={pagesList} tblName="Orders" icons={icons}/>
+        <Table dataList={response} tblName="Orders" icons={icons}/>
     </ContentMover>
     <NavBar/>
     <aside><SideBar/></aside>
